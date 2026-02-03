@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XX&XX的恋爱纪念星球</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", 思源黑体, 幼圆, sans-serif;
+        }
+        /* 全局样式：奶油白背景，温柔滚动 */
+        body {
+            background-color: #fff9f8;
+            color: #333;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ffccd5;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fef5f7;
+        }
+        a {
+            text-decoration: none;
+            color: #ff6b9d;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+        /* 导航栏：固定顶部，温柔渐变 */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(180deg, #fff9f8 80%, transparent);
+            z-index: 999;
+            padding: 15px 0;
+            border-bottom: 1px solid #ffe6ef;
+        }
+        .nav .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            margin: 0 auto;
+        }
+        .nav .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff6b9d;
+        }
+        .nav .menu {
+            display: flex;
+            gap: 25px;
+        }
+        .nav .menu a {
+            font-size: 14px;
+            color: #666;
+            transition: all 0.3s;
+        }
+        .nav .menu a:hover {
+            color: #ff6b9d;
+            transform: translateY(-2px);
+        }
+        /* 首页欢迎区：合照背景+计时器+进入按钮，核心仪式感 */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(255,249,248,0.85), rgba(255,249,248,0.85)), url("https://img0.baidu.com/it/u=123456,789012&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=889") no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 60px;
+            position: relative;
+        }
+        .hero .title {
+            font-size: 36px;
+            color: #ff6b9d;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(255,107,157,0.2);
+        }
+        .hero .slogan {
+            font-size: 18px;
+            color: #888;
+            margin-bottom: 40px;
+        }
+        /* 恋爱计时器：超大字体，粉色突出，精准到秒 */
+        .timer {
+            font-size: 40px;
+            font-weight: bold;
+            color: #ff6b9d;
+            margin-bottom: 50px;
+            background: rgba(255,255,255,0.7);
+            padding: 20px 40px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(255,107,157,0.1);
+        }
+        .hero .btn {
+            padding: 15px 35px;
+            background: #ff6b9d;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255,107,157,0.3);
+        }
+        .hero .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255,107,157,0.4);
+            background: #ff578f;
+        }
+        /* 板块通用样式：标题+下划线，滚动渐入 */
+        .section {
+            padding: 80px 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        .section.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .section-title {
+            text-align: center;
+            font-size: 28px;
+            color: #ff6b9d;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        .section-title::after {
+            content: "";
+            width: 80px;
+            height: 3px;
+            background: #ffccd5;
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+        .section-desc {
+            text-align: center;
+            color: #999;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+        /* 我们的故事线：时间轴样式，左右分布 */
+        .story-timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .story-timeline::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: #ffccd5;
+            transform: translateX(-50%);
+        }
+        .story-item {
+            padding: 15px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        .story-item::after {
+            content: "";
+            position: absolute;
+            top: 20px;
+            right: -11px;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 2px solid #ff6b9d;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .story-left {
+            left: 0;
+        }
+        .story-right {
+            left: 50%;
+        }
+        .story-right::after {
+            left: -9px;
+        }
+        .story-content {
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 3px 15px rgba(255,107,157,0.1);
+            transition: all 0.3s;
+        }
+        .story-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255,107,157,0.15);
+        }
+        .story-time {
+            font-size: 14px;
+            color: #ff6b9d;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .story-tag {
+            font-size: 12px;
+            color: white;
+            background: #ffccd5;
+            padding: 3px 8px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .story-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .story-img {
+            width: 100%;
+            height: 180px;
+            border-radius: 10px;
+            margin-top: 15px;
+            object-fit: cover;
+        }
+        /* 合照收藏夹：网格布局，hover放大，分类展示 */
+        .photo-cat {
+            text-align: center;
+            font-size: 20px;
+            color: #ff8da9;
+            margin: 30px 0 20px;
+            font-weight: 500;
+        }
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .photo-item {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(255,107,157,0.1);
+            transition: all 0.3s;
+        }
+        .photo-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255,107,157,0.15);
+        }
+        .photo-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .photo-desc {
+            padding: 10px;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            background: white;
+        }
+        /* 纪念日板块：倒计时+清单，卡片样式 */
+        .anniversary-wrap {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .anniversary-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 3px 15px rgba(255,107,157,0.1);
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .anniversary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255,107,157,0.15);
+        }
+        .anni-title {
+            font-size: 18px;
+            color: #ff6b9d;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        .anni-time {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+        .anni-countdown {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff578f;
+            margin: 10px 0;
+        }
+        .anni-record {
+            font-size: 12px;
+            color: #999;
+            line-height: 1.5;
+            margin-top: 15px;
+            text-align: left;
+        }
+        /* 100件小事：两列布局，打卡样式 */
+        .things-wrap {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .things-item {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 3px 15px rgba(255,107,157,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+        .things-item:hover {
+            transform: translateY(-3px);
+        }
+        .things-check {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #ffccd5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .things-check.done {
+            background: #ff6b9d;
+            border-color: #ff6b9d;
+        }
+        .things-check.done::after {
+            content: "✓";
+            color: white;
+            font-size: 14px;
+        }
+        .things-text {
+            font-size: 14px;
+            color: #666;
+        }
+        /* 甜言蜜语留言板：输入+展示，本地存储 */
+        .message-wrap {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .message-input {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 3px 15px rgba(255,107,157,0.1);
+            margin-bottom: 40px;
+        }
+        .message-input textarea {
+            width: 100%;
+            height: 120px;
+            border: 1px solid #ffe6ef;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 14px;
+            color: #666;
+            resize: none;
+            margin-bottom: 15px;
+            outline: none;
+        }
+        .message-input textarea:focus {
+            border-color: #ffccd5;
+        }
+        .message-input .btn {
+            padding: 10px 30px;
+            background: #ff6b9d;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .message-input .btn:hover {
+            background: #ff578f;
+        }
+        .message-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .message-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 3px 15px rgba(255,107,157,0.1);
+            align-self: flex-start;
+            max-width: 70%;
+        }
+        .message-card.yours {
+            align-self: flex-end;
+            background: #fff0f5;
+        }
+        .message-time {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+        .message-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        /* 情侣档案：卡片布局，趣味信息 */
+        .couple-wrap {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .couple-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 3px 15px rgba(255,107,157,0.1);
+            text-align: center;
+        }
+        .couple-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            object-fit: cover;
+            border: 3px solid #ffe6ef;
+        }
+        .couple-name {
+            font-size: 20px;
+            color: #ff6b9d;
+            margin-bottom: 10px;
+        }
+        .couple-info {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .couple-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #fef5f7;
+            font-size: 14px;
+        }
+        .couple-info-item .key {
+            color: #999;
+        }
+        .couple-info-item .value {
+            color: #666;
+            font-weight: 500;
+        }
+        .couple-tag {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+        .couple-tag span {
+            font-size: 12px;
+            color: #ff6b9d;
+            background: #ffe6ef;
+            padding: 3px 10px;
+            border-radius: 10px;
+        }
+        /* 页脚：温柔祝福，爱心装饰 */
+        .footer {
+            background: #fff0f5;
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .footer-text {
+            color: #ff8da9;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .footer-copyright {
+            color: #ccc;
+            font-size: 12px;
+        }
+        /* 爱心漂浮动画：核心氛围感 */
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff6b9d;
+            transform: rotate(45deg);
+            opacity: 0.7;
+            animation: heartFall linear forwards;
+            z-index: 99;
+        }
+        .heart::before, .heart::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff6b9d;
+            border-radius: 50%;
+        }
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+        .heart::after {
+            top: 0;
+            left: -10px;
+        }
+        @keyframes heartFall {
+            0% {
+                transform: rotate(45deg) translateY(0);
+                opacity: 0.7;
+            }
+            100% {
+                transform: rotate(45deg) translateY(100vh);
+                opacity: 0;
+            }
+        }
+        /* 移动端适配：导航折叠，板块自适应 */
+        @media (max-width: 768px) {
+            .nav .menu {
+                gap: 15px;
+            }
+            .hero .title {
+                font-size: 28px;
+            }
+            .timer {
+                font-size: 28px;
+                padding: 15px 30px;
+            }
+            .story-timeline::after {
+                left: 31px;
+            }
+            .story-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 15px;
+            }
+            .story-right {
+                left: 0;
+            }
+            .story-left::after, .story-right::after {
+                left: 15px;
+            }
+            .photo-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            .photo-item img {
+                height: 150px;
+            }
+            .message-card {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏：点击跳转到对应板块 -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <div class="logo">XX&XX的恋爱星球</div>
+            <div class="menu">
+                <a href="#story">我们的故事</a>
+                <a href="#photo">合照收藏</a>
+                <a href="#anniversary">专属纪念日</a>
+                <a href="#things">100件小事</a>
+                <a href="#message">甜言蜜语</a>
+                <a href="#couple">情侣档案</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 首页欢迎区：核心仪式感，恋爱计时器 -->
+    <section class="hero" id="hero">
+        <h1 class="title">XX & XX</h1>
+        <p class="slogan">三餐四季，岁岁年年，从遇见开始，余生都是你</p>
+        <div class="timer" id="loveTimer">0天0时0分0秒</div>
+        <button class="btn" onclick="document.querySelector('#story').scrollIntoView({behavior:'smooth'})">进入我们的故事</button>
+    </section>
+
+    <!-- 我们的故事线：时间轴，记录关键节点 -->
+    <section class="section" id="story">
+        <div class="container">
+            <h2 class="section-title">我们的故事线</h2>
+            <p class="section-desc">从相遇的心动，到相守的温柔，每一个瞬间都值得珍藏</p>
+            <div class="story-timeline">
+                <!-- 故事节点1：相遇 -->
+                <div class="story-item story-left">
+                    <div class="story-content">
+                        <div class="story-tag">💓 初次相遇</div>
+                        <div class="story-time">202X年X月X日</div>
+                        <div class="story-text">在XX咖啡店，你穿了一件白衬衫，阳光洒在你身上，那一刻心跳漏了一拍</div>
+                        <img src="https://img0.baidu.com/it/u=111111,222222&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="相遇" class="story-img">
+                    </div>
+                </div>
+                <!-- 故事节点2：告白 -->
+                <div class="story-item story-right">
+                    <div class="story-content">
+                        <div class="story-tag">💍 告白瞬间</div>
+                        <div class="story-time">202X年X月X日</div>
+                        <div class="story-text">在XX公园的湖边，你拿着小蛋糕跟我表白，我点头的时候，眼泪忍不住掉了下来</div>
+                        <img src="https://img0.baidu.com/it/u=333333,444444&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="告白" class="story-img">
+                    </div>
+                </div>
+                <!-- 故事节点3：在一起 -->
+                <div class="story-item story-left">
+                    <div class="story-content">
+                        <div class="story-tag">❤️ 正式在一起</div>
+                        <div class="story-time">202X年X月X日</div>
+                        <div class="story-text">我们正式在一起啦！从此，世界上多了一个陪我哭、陪我笑、陪我闹的人</div>
+                        <img src="https://img0.baidu.com/it/u=555555,666666&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="在一起" class="story-img">
+                    </div>
+                </div>
+                <!-- 可继续添加更多故事节点 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 合照收藏夹：分类展示，日常/旅行/节日 -->
+    <section class="section" id="photo">
+        <div class="container">
+            <h2 class="section-title">合照收藏夹</h2>
+            <p class="section-desc">把每一个甜蜜瞬间，都藏在时光里</p>
+            <!-- 日常点滴 -->
+            <h3 class="photo-cat">📸 日常点滴</h3>
+            <div class="photo-grid">
+                <div class="photo-item"><img src="https://img0.baidu.com/it/u=777777,888888&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="日常"><p class="photo-desc">一起窝在沙发追剧</p></div>
+                <div class="photo-item"><img src="https://img0.baidu.com/it/u=999999,000000&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="日常"><p class="photo-desc">下班牵手回家</p></div>
+                <div class="photo-item"><img src="https://img0.baidu.com/it/u=123123,456456&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="日常"><p class="photo-desc">一起吃早餐</p></div>
+            </div>
+            <!-- 旅行打卡 -->
+            <h3 class="photo-cat">✈️ 旅行打卡</h3>
+            <div class="photo-grid">
+                <div class="photo-item"><img src="https://img0.baidu.com/it/u=789789,147147&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="旅行"><p class="photo-desc">202X年 一起去厦门看海</p></div>
+                <div class="photo-item"><img src="https://img0.baidu.com/it/u=258258,369369&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="旅行"><p class="photo-desc">202X年 一起去杭州看西湖</p></div>
+            </div>
+            <!-- 节日纪念 -->
+            <h3 class="photo-cat">🎁 节日纪念</h3>
+            <div class="photo-grid">
+                <div class="photo-item"><img src="https://img0.baidu.com/it/u=159159,753753&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="节日"><p class="photo-desc">202X情人节 一起吃蛋糕</p></div>
+                <div class="photo-item"><img src="https://img0.baidu.com/it/u=951951,357357&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="节日"><p class="photo-desc">在一起1周年 看烟花</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 专属纪念日：倒计时+历年记录 -->
+    <section class="section" id="anniversary">
+        <div class="container">
+            <h2 class="section-title">专属纪念日</h2>
+            <p class="section-desc">重要的日子，永远不会忘记，每年都要一起庆祝</p>
+            <div class="anniversary-wrap">
+                <!-- 在一起纪念日 -->
+                <div class="anniversary-card">
+                    <h3 class="anni-title">在一起纪念日</h3>
+                    <p class="anni-time">每年 X月X日</p>
+                    <div class="anni-countdown" id="anni1">0天0时0分0秒</div>
+                    <p class="anni-record">202X年1周年：吃了奶油蛋糕，一起看了烟花<br>202X年2周年：去了海边，拍了情侣写真</p>
+                </div>
+                <!-- 告白日 -->
+                <div class="anniversary-card">
+                    <h3 class="anni-title">告白日</h3>
+                    <p class="anni-time">每年 X月X日</p>
+                    <div class="anni-countdown" id="anni2">0天0时0分0秒</div>
+                    <p class="anni-record">202X年：重走了告白的公园，吃了同款小蛋糕</p>
+                </div>
+                <!-- 我的生日 -->
+                <div class="anniversary-card">
+                    <h3 class="anni-title">我的生日</h3>
+                    <p class="anni-time">每年 X月X日</p>
+                    <div class="anni-countdown" id="anni3">0天0时0分0秒</div>
+                    <p class="anni-record">202X年：收到了最喜欢的小熊花束，吃了长寿面</p>
+                </div>
+                <!-- 你的生日 -->
+                <div class="anniversary-card">
+                    <h3 class="anni-title">你的生日</h3>
+                    <p class="anni-time">每年 X月X日</p>
+                    <div class="anni-countdown" id="anni4">0天0时0分0秒</div>
+                    <p class="anni-record">202X年：一起拼了乐高，吃了巧克力蛋糕</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 100件小事：打卡样式，已完成/待完成 -->
+    <section class="section" id="things">
+        <div class="container">
+            <h2 class="section-title">我们的100件小事</h2>
+            <p class="section-desc">一起完成，一起解锁，把平凡的日子过成诗</p>
+            <div class="things-wrap">
+                <!-- 已完成 -->
+                <div class="things-item">
+                    <div class="things-check done"></div>
+                    <div class="things-text">一起做一顿可乐鸡翅</div>
+                </div>
+                <div class="things-item">
+                    <div class="things-check done"></div>
+                    <div class="things-text">一起窝在沙发看一部电影</div>
+                </div>
+                <div class="things-item">
+                    <div class="things-check done"></div>
+                    <div class="things-text">一起去海边看日落</div>
+                </div>
+                <!-- 待完成 -->
+                <div class="things-item">
+                    <div class="things-check"></div>
+                    <div class="things-text">一起拍一套情侣写真</div>
+                </div>
+                <div class="things-item">
+                    <div class="things-check"></div>
+                    <div class="things-text">一起去游乐园坐摩天轮</div>
+                </div>
+                <div class="things-item">
+                    <div class="things-check"></div>
+                    <div class="things-text">一起养一盆小多肉</div>
+                </div>
+                <!-- 可继续添加更多小事 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 甜言蜜语留言板：输入+展示，本地存储 -->
+    <section class="section" id="message">
+        <div class="container">
+            <h2 class="section-title">甜言蜜语留言板</h2>
+            <p class="section-desc">把想说的话藏在这里，双向奔赴的温柔</p>
+            <div class="message-wrap">
+                <div class="message-input">
+                    <textarea placeholder="写下想对对方说的甜言蜜语吧～" id="msgInput"></textarea>
+                    <button class="btn" onclick="sendMessage()">发送甜蜜</button>
+                </div>
+                <div class="message-list" id="msgList">
+                    <!-- 留言会通过JS动态生成，本地存储 -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 情侣档案：趣味信息，彼此的小细节 -->
+    <section class="section" id="couple">
+        <div class="container">
+            <h2 class="section-title">情侣专属档案</h2>
+            <p class="section-desc">藏着彼此的小细节，原来我这么了解你</p>
+            <div class="couple-wrap">
+                <!-- 我的档案 -->
+                <div class="couple-card">
+                    <img src="https://img0.baidu.com/it/u=112233,445566&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="我的头像" class="couple-avatar">
+                    <h3 class="couple-name">XX（我）</h3>
+                    <div class="couple-info">
+                        <div class="couple-info-item">
+                            <span class="key">生日</span>
+                            <span class="value">X年X月X日</span>
+                        </div>
+                        <div class="couple-info-item">
+                            <span class="key">星座</span>
+                            <span class="value">XX座</span>
+                        </div>
+                        <div class="couple-info-item">
+                            <span class="key">小癖好</span>
+                            <span class="value">不爱吃香菜，爱喝三分糖奶茶</span>
+                        </div>
+                        <div class="couple-info-item">
+                            <span class="key">小优点</span>
+                            <span class="value">温柔，会包容你的小脾气</span>
+                        </div>
+                    </div>
+                    <div class="couple-tag">
+                        <span>奶茶搭子</span>
+                        <span>追剧搭子</span>
+                        <span>干饭搭子</span>
+                    </div>
+                </div>
+                <!-- 你的档案 -->
+                <div class="couple-card">
+                    <img src="https://img0.baidu.com/it/u=778899,001122&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="你的头像" class="couple-avatar">
+                    <h3 class="couple-name">XX（你）</h3>
+                    <div class="couple-info">
+                        <div class="couple-info-item">
+                            <span class="key">生日</span>
+                            <span class="value">X年X月X日</span>
+                        </div>
+                        <div class="couple-info-item">
+                            <span class="key">星座</span>
+                            <span class="value">XX座</span>
+                        </div>
+                        <div class="couple-info-item">
+                            <span class="key">小癖好</span>
+                            <span class="value">睡觉爱抱枕头，打游戏超厉害</span>
+                        </div>
+                        <div class="couple-info-item">
+                            <span class="key">小优点</span>
+                            <span class="value">细心，会把我宠成小朋友</span>
+                        </div>
+                    </div>
+                    <div class="couple-tag">
+                        <span>游戏搭子</span>
+                        <span>宠妻搭子</span>
+                        <span>拍照搭子</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-text">愿我们岁岁年年，满心欢喜，共赴白头</div>
+        <div class="footer-copyright">©202X XX&XX的恋爱纪念星球 专属甜蜜</div>
+    </footer>
+
+    <script>
+        // ！！！修改这里的密码为你们的专属密码
+const PWD = '041029';
+const inputPwd = prompt('请输入恋爱专属密码：');
+if (inputPwd !== PWD) {
+    alert('密码错误，非情侣禁止访问～');
+    window.close(); // 关闭页面
+}
+        // -------------------------- 核心功能1：恋爱计时器（正计时）--------------------------
+        // ！！！修改这里：你们的恋爱开始日期（年,月-1,日），月份要减1（比如1月写0，2月写1）
+        const LOVE_START = new Date(2024, 8, 1); // 示例：2024年9月1日
+        function updateLoveTimer() {
+            const now = new Date();
+            const diff = now - LOVE_START;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const secs = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById('loveTimer').innerText = `${days}天${hours}时${mins}分${secs}秒`;
+        }
+        setInterval(updateLoveTimer, 1000);
+        updateLoveTimer();
+
+        // -------------------------- 核心功能2：纪念日倒计时 --------------------------
+        // ！！！修改这里：纪念日日期（月-1,日），月份减1，可添加更多纪念日
+        const ANNIVERSARIES = {
+            anni1: [7, 20], // 在一起纪念日：8月20日
+            anni2: [6, 15], // 告白日：7月15日
+            anni3: [1, 5],  // 我的生日：2月5日
+            anni4: [9, 10]  // 你的生日：10月10日
+        };
+        function updateAnniCountdown() {
+            const now = new Date();
+            const year = now.getFullYear();
+            for (let id in ANNIVERSARIES) {
+                const [month, day] = ANNIVERSARIES[id];
+                let anniDate = new Date(year, month, day);
+                // 如果今年的纪念日已过，计算明年的
+                if (anniDate < now) anniDate = new Date(year + 1, month, day);
+                const diff = anniDate - now;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diff % (1000 * 60)) / 1000);
+                document.getElementById(id).innerText = `${days}天${hours}时${mins}分${secs}秒`;
+            }
+        }
+        setInterval(updateAnniCountdown, 1000);
+        updateAnniCountdown();
+
+        // -------------------------- 核心功能3：甜言蜜语留言板（本地存储，刷新不丢）--------------------------
+        const msgList = document.getElementById('msgList');
+        const msgInput = document.getElementById('msgInput');
+        // 初始化加载留言
+        function loadMessages() {
+            const msgs = JSON.parse(localStorage.getItem('loveMessages')) || [];
+            msgList.innerHTML = '';
+            msgs.forEach(msg => {
+                const card = document.createElement('div');
+                card.className = `message-card ${msg.type}`;
+                card.innerHTML = `<div class="message-time">${msg.time}</div><div class="message-text">${msg.text}</div>`;
+                msgList.appendChild(card);
+            });
+            // 滚动到最新留言
+            msgList.scrollTop = msgList.scrollHeight;
+        }
+        // 发送留言
+        function sendMessage() {
+            const text = msgInput.value.trim();
+            if (!text) {
+                alert('写下你的甜蜜吧～');
+                return;
+            }
+            // 获取当前时间
+            const now = new Date();
+            const time = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,0)}-${now.getDate().toString().padStart(2,0)} ${now.getHours().toString().padStart(2,0)}:${now.getMinutes().toString().padStart(2,0)}`;
+            // 随机分配留言方（可自己修改：固定为我/你，或点击切换）
+            const type = Math.random() > 0.5 ? 'yours' : '';
+            const newMsg = { text, time, type };
+            // 保存到本地存储
+            const msgs = JSON.parse(localStorage.getItem('loveMessages')) || [];
+            msgs.push(newMsg);
+            localStorage.setItem('loveMessages', JSON.stringify(msgs));
+            // 清空输入框，重新加载
+            msgInput.value = '';
+            loadMessages();
+        }
+        // 初始化加载
+        loadMessages();
+
+        // -------------------------- 核心功能4：板块滚动渐入动效 --------------------------
+        const sections = document.querySelectorAll('.section');
+        function checkSectionShow() {
+            sections.forEach(section => {
+                const top = section.getBoundingClientRect().top;
+                if (top < window.innerHeight * 0.8) {
+                    section.classList.add('show');
+                }
+            });
+        }
+        window.addEventListener('scroll', checkSectionShow);
+        checkSectionShow();
+
+        // -------------------------- 核心功能5：点击页面撒爱心（氛围感拉满）--------------------------
+        document.addEventListener('click', (e) => {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            // 爱心位置跟随鼠标
+            heart.style.left = `${e.clientX - 10}px`;
+            heart.style.top = `${e.clientY - 10}px`;
+            // 随机大小和动画时长
+            const size = Math.random() * 10 + 10;
+            heart.style.width = `${size}px`;
+            heart.style.height = `${size}px`;
+            heart.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            document.body.appendChild(heart);
+            // 动画结束后移除爱心
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        });
+
+        // -------------------------- 核心功能6：爱心漂浮动画 --------------------------
+        function createFloatHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            // 随机位置和大小
+            const left = Math.random() * 100;
+            const size = Math.random() * 10 + 10;
+            heart.style.left = `${left}vw`;
+            heart.style.top = `-50px`;
+            heart.style.width = `${size}px`;
+            heart.style.height = `${size}px`;
+            heart.style.animationDuration = `${Math.random() * 10 + 10}s`;
+            document.body.appendChild(heart);
+            // 动画结束后移除爱心
+            setTimeout(() => {
+                heart.remove();
+            }, 15000);
+        }
+        // 每隔1秒创建一个爱心
+        setInterval(createFloatHeart, 1000);
+    </script>
+</body>
+</html>
